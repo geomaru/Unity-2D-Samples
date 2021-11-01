@@ -6,25 +6,25 @@ using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
-    //ゲームオーバーテキスト
+    //GameOver text message
     private GameObject gameOverText;
 
-    // 走行距離テキスト
+    // Run Length Counter
     private GameObject runLengthText;
 
-    //　走った距離
+    //　Run length
     private float len = 0;
 
-    // 走る速度
+    // Running Spped
     private float speed = 5f;
 
-    //　ゲームオーバーの判定
+    //　GameOver setting
     private bool isGameOver = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        // シーンビューからゲームオブジェクト の実体を検索する
+        // Find a game object from the scene
         this.gameOverText = GameObject.Find ("GameOver");
         this.runLengthText = GameObject.Find ("RunLength");
     }
@@ -34,27 +34,27 @@ public class UIController : MonoBehaviour
     {
         if (this.isGameOver == false )
         {
-        // 走った距離を更新する
+        // Update the run length
         this.len += this.speed * Time.deltaTime;
 
-        // 走った距離を表示する
+        // Show the length in the text component
         this.runLengthText.GetComponent<Text>().text = "Distance:  " + len.ToString ("F2") + "m";
 
         }
-        //ゲームオーバーになった場合
+        //Compare Game Over
         if (this.isGameOver == true)
         {
-            //クリックされたらシーンをロードする
+            //If the player click, then reload
             if (Input.GetMouseButtonDown(0))
             {
-                //SampleSceneを読み込む
+                //relead the Scene
                 SceneManager.LoadScene ("SampleScene");
             }
         }
     }
     public void GameOver()
     {
-        //ゲームオーバーになったときに、画面上にゲームオーバーテキストを表示する
+        //Show up the Game over text when the player found the game over
         this.gameOverText.GetComponent<Text>().text = "Game Over";
         this.isGameOver = true;
     }

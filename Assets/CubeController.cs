@@ -4,45 +4,44 @@ using UnityEngine;
 
 public class CubeController : MonoBehaviour
 {
-    //キューブの移動速度
+    //Spped of Cubes
     private float speed = -12;
 
-    //消滅位置
+    //Delete cube position
     private float deadLine = -10;
  
-    // AudioSource を se として設定
+    // Set AudioSource as se 
     AudioSource se;
 
     // Start is called before the first frame update
     void Start()
     {
-        // ゲームオブジェクトにアタッチされている AudioSource を se に格納（初期化）
+        // Set se as AudioSource attached in the gameobject(init)
         se = GetComponent<AudioSource> ();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //キューブを移動させる
+        //Moving cube
         transform.Translate (this.speed * Time.deltaTime, 0, 0);
-
-        //画面外に出たら破棄する
+        
+        //Delete cube once it will be outside of the window area
         if (transform.position.x < this.deadLine)
         {
             Destroy (gameObject);
         }
     }
-    //OnCollisionEnter2D は MonoBehaviour クラスを継承しているので呼び出しは不要
-    //Pinballを参考に2D版のOnCollisionEnter2Dを設定
+    //FYI: OnCollisionEnter2D is inheritance class of MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collisionInfo)
     {
-        // CubeTag(生成されるcubePrefab)同士がぶつかった場合の処理
+        // Process for CubeTag(for Generated cubePrefab)
         if (collisionInfo.transform.tag == "CubeTag")
         {
-            //AudioSource には block　がアタッチされていて、ぶつかった場合にPlayする
+            //If they hit collision each other, then it sound from attached from AudioSource
             se.Play();
         }
-        // Cube が地面にぶつかった時も block の音を鳴らす
+        // If the Cube touch down the ground, it also sound se
         if(collisionInfo.transform.tag =="GroundTag")
         {
             se.Play();

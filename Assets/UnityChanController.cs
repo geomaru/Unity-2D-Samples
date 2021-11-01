@@ -4,54 +4,54 @@ using UnityEngine;
 
 public class UnityChanController : MonoBehaviour
 {
-    //アニメーションするためのコンポーネントを入れる
+    //Add Animator component 
     Animator animator;
 
-    // Unityちゃんを移動させるコンポーネントを入れる
+    // Rigidbody for main character
     Rigidbody2D rigid2D;
 
-    //地面の位置
+    //The ground position
     private float groundLevel = -3.0f;
 
-    //ジャンプの速度の減衰
+    //Jump speed Attenuation settings
     private float dump = 0.8f;
 
-    //ジャンプの速度
+    //Jump speed 
     float jumpVelocity = 20;
 
-    // ゲームオーバーになる位置
+    // Position of game over line
     private float deadLine = -9;
 
     // Start is called before the first frame update
     void Start()
     {
-        // アニメーションのコンポーネントを取得する
+        // Get animation component
         this.animator = GetComponent<Animator> ();
 
-        // Rigidbody2D のコンポーネントを取得する
+        // Get Rigidbody2D component
         this.rigid2D = GetComponent<Rigidbody2D> ();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //走るアニメーションを再生するために、Animatorのパラメータを調節する
+        //For running character
         this.animator.SetFloat("Horizontal", 1);        
 
-        //着地しているかどうかを調べる
+        // Confirm whether the character is in the ground or in the air
         bool isGround = (transform.position.y > this.groundLevel) ? false:true;
         this.animator.SetBool("isGround", isGround);
 
-        // ジャンプ状態の時はボリュームをゼロにする
+        // When the character is not touching in the ground, mute sound
         GetComponent<AudioSource> ().volume = (isGround) ? 1 : 0;
 
-        //着地状態でクリックされた場合
+        //Compare the character is in the gound and hit Mouse Button Down
         if (Input.GetMouseButtonDown (0) && isGround)
         {
-            //上方向へ力をかける
+            //Add velocity to upper Y side(to the air)
             this.rigid2D.velocity = new Vector2 (0, jumpVelocity);
         }
-        //クリックをやめたら上方向への速度を減速する
+        //If the player stop puress the Mouse, then it slightly slow down the speed by using dump
         if (Input.GetMouseButton (0) == false)
         {
                 if(this.rigid2D.velocity.y > 0)
@@ -59,13 +59,13 @@ public class UnityChanController : MonoBehaviour
                     this.rigid2D.velocity *= this.dump;
                 }
         }
-        //デッドラインを超えた場合ゲームオーバーにする
+        //judgement of the deadline
         if (transform.position.x < this.deadLine)
         {
-            // UIController のGameOver 関数を呼び出して画面上に”GameOver”と表示する
+            // Show the Game Over in the canvas
             GameObject.Find("Canvas").GetComponent<UIController> ().GameOver ();
 
-            //ユニティちゃんを破棄する
+            //Destroy game object (main character)
             Destroy (gameObject); 
         }
     }
